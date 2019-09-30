@@ -1,3 +1,5 @@
+# run me if you want to test the package
+
 import unittest, os
 
 loader = unittest.TestLoader()

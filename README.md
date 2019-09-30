@@ -1,6 +1,6 @@
 # Intro
 
-This project provides useful Python functions
+This project provides useful Python functions / gists to be reused in other projects.
 
 # Test the project
 

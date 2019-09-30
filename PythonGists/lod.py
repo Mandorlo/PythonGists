@@ -2,6 +2,9 @@
 This modules provides useful functions on lists of dicts
 '''
 
+import re
+from PythonGists.dict import get_path
+
 def lod_find(list_of_dict, key, val, return_val_if_false = False):
     """
     returns the first dict d in list_of_dict where `d[key] = val`
@@ -35,7 +38,7 @@ def lod_find(list_of_dict, key, val, return_val_if_false = False):
 def lod_filter(lod, filters = []):
     '''
     Filters elements of a list of dicts (lod)<br>
-    e.g. `filters = ['@size > 1000', '@last_modified > "2019-09-13"']`
+    e.g. `filters = ['@size/MB > 1000', '@last_modified > "2019-09-13"']`
 
     Parameters
     ----------
@@ -52,7 +55,7 @@ def lod_filter(lod, filters = []):
 
     Example
     -------
-    A filter like `@size > 1000` will filter only elements `d` of `lod` such that `d['size'] > 1000`
+    A filter like `@size/MB > 1000` will filter only elements `d` of `lod` such that `d['size']['MB'] > 1000`
     This is evaluated with the python eval function
 
     '''
@@ -63,8 +66,8 @@ def lod_filter(lod, filters = []):
         filters_parsed = filters_s
         attributes = list(map(lambda x: x[1], re.findall(r"(^|\s)(\@[^\s]+)(\s|$)", filters_parsed)))
         for attr in attributes:
-            if attr[1:] in d: 
-                v = d[attr[1:]]
+            v = get_path(d, attr[1:], '/', False)
+            if v != False:
                 if isinstance(v, str): filters_parsed = filters_parsed.replace(attr, '"' +v + '"')
                 elif isinstance(v, float) or isinstance(v, int): filters_parsed = filters_parsed.replace(attr, str(v))
                 else: filters_parsed = filters_parsed.replace(attr, str(v))
